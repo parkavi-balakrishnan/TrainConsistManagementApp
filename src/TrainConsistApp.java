@@ -1,45 +1,27 @@
-import java.util.Scanner;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.*;
 
-public class TrainValidationApp {
-
-    // Regex patterns
-    private static final String TRAIN_ID_REGEX = "TRN-\\d{4}";
-    private static final String CARGO_CODE_REGEX = "PET-[A-Z]{2}";
+public class SafetyCheckApp {
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        List<GoodsBogie> bogies = new ArrayList<>();
 
-        // Input from user
-        System.out.print("Enter Train ID: ");
-        String trainId = sc.nextLine();
+        // Sample data (you can take input also)
+        bogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new GoodsBogie("Open", "Coal"));
+        bogies.add(new GoodsBogie("Box", "Grain"));
 
-        System.out.print("Enter Cargo Code: ");
-        String cargoCode = sc.nextLine();
+        // Stream + allMatch validation
+        boolean isSafe = bogies.stream().allMatch(bogie ->
+                !bogie.getType().equalsIgnoreCase("Cylindrical") ||
+                        bogie.getCargo().equalsIgnoreCase("Petroleum")
+        );
 
-        // Compile patterns
-        Pattern trainPattern = Pattern.compile(TRAIN_ID_REGEX);
-        Pattern cargoPattern = Pattern.compile(CARGO_CODE_REGEX);
-
-        // Create matcher objects
-        Matcher trainMatcher = trainPattern.matcher(trainId);
-        Matcher cargoMatcher = cargoPattern.matcher(cargoCode);
-
-        // Validate using matches()
-        if (trainMatcher.matches()) {
-            System.out.println("Train ID is VALID");
+        // Output
+        if (isSafe) {
+            System.out.println("Train is SAFETY COMPLIANT ✅");
         } else {
-            System.out.println("Train ID is INVALID");
+            System.out.println("Train is NOT SAFE ❌");
         }
-
-        if (cargoMatcher.matches()) {
-            System.out.println("Cargo Code is VALID");
-        } else {
-            System.out.println("Cargo Code is INVALID");
-        }
-
-        sc.close();
     }
 }
