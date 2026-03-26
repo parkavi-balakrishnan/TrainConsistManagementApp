@@ -1,45 +1,18 @@
-import java.util.*;
-import java.util.stream.*;
-
-public class PerformanceComparisonApp {
+public class ExceptionHandlingApp {
 
     public static void main(String[] args) {
 
-        List<Bogie> bogies = new ArrayList<>();
+        try {
+            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Bogie created: " + b1.getType() + " Capacity: " + b1.getCapacity());
 
-        // Create sample data (large dataset)
-        for (int i = 0; i < 100000; i++) {
-            bogies.add(new Bogie("Passenger", (int)(Math.random() * 100)));
+            PassengerBogie b2 = new PassengerBogie("AC Chair", -10); // Invalid
+            System.out.println("Bogie created: " + b2.getType());
+
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        // ---------------- LOOP APPROACH ----------------
-        long startLoop = System.nanoTime();
-
-        List<Bogie> loopResult = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.getCapacity() > 60) {
-                loopResult.add(b);
-            }
-        }
-
-        long endLoop = System.nanoTime();
-        long loopTime = endLoop - startLoop;
-
-        // ---------------- STREAM APPROACH ----------------
-        long startStream = System.nanoTime();
-
-        List<Bogie> streamResult = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
-
-        long endStream = System.nanoTime();
-        long streamTime = endStream - startStream;
-
-        // ---------------- OUTPUT ----------------
-        System.out.println("Loop Result Size: " + loopResult.size());
-        System.out.println("Stream Result Size: " + streamResult.size());
-
-        System.out.println("Loop Time (ns): " + loopTime);
-        System.out.println("Stream Time (ns): " + streamTime);
+        System.out.println("Program continues safely...");
     }
 }
